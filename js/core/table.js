@@ -17,16 +17,16 @@ export function renderTable({ data, columns, tbody }) {
 }
 
 export function renderTableHeader({ columns, thead }) {
-  if (!thead) return;
-
   thead.innerHTML = '';
 
   const tr = document.createElement('tr');
 
   columns.forEach(col => {
     const th = document.createElement('th');
-    th.className =
-      'p-3 text-left font-semibold text-slate-700 bg-slate-100 whitespace-nowrap';
+    if (col.key === 'summary') {
+      td.className =
+        'p-3 max-w-md whitespace-normal text-slate-600';
+    }
     th.textContent = col.label;
     tr.appendChild(th);
   });
