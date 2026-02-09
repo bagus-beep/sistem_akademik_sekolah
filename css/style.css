@@ -1,0 +1,11 @@
+body {
+  scroll-behavior: smooth;
+}
+
+.stat-card {
+  @apply block bg-white rounded-xl p-5 shadow transition;
+}
+
+.stat-card:hover {
+  @apply shadow-md ring-2;
+}
