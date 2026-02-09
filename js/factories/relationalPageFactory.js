@@ -1,5 +1,5 @@
 import { fetchAll } from '../core/fetcher.js';
-import { renderTable,renderTableHeader } from '../core/table.js';
+import { renderTable, renderTableHeader } from '../core/table.js';
 import { createPaginator } from '../core/paginator.js';
 import { applySearch } from '../core/search.js';
 import { applyComputedColumns } from '../core/applyComputedColumns.js';
@@ -45,7 +45,8 @@ export function createRelationalPage(config) {
     Object.fromEntries(rows.map(r => [r.id, r]));
 
   function resolveRelations(baseRow, indexes) {
-    const row = {};
+    // ✅ BASE ROW TETAP ADA
+    const row = { ...baseRow };
 
     for (const [key, rel] of Object.entries(config.relations)) {
       const { from, source, display, fallback = '-' } = rel;
@@ -92,11 +93,12 @@ export function createRelationalPage(config) {
         }
       });
 
-      // ---- build rows (PIPELINE)
+      // ---- build rows (PIPELINE BERSIH)
       allData = baseRows.map(baseRow => {
         const resolved = resolveRelations(baseRow, indexes);
+
         const transformed = config.transform
-          ? config.transform(resolved, baseRow)
+          ? config.transform(resolved) // ✅ SINGLE SOURCE
           : resolved;
 
         return applyComputedColumns(transformed, config.columns);
@@ -115,7 +117,6 @@ export function createRelationalPage(config) {
         thead
       });
 
-      // ---- render body
       function draw() {
         renderTable({
           data: pager.getPage(),
@@ -149,8 +150,5 @@ export function createRelationalPage(config) {
     }
   }
 
-  // =========================
-  // PUBLIC API
-  // =========================
   return { init };
 }
