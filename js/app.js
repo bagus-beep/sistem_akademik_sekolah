@@ -34,9 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     <div class="bg-white rounded-xl shadow overflow-hidden">
       <div class="overflow-x-auto">
         <table class="min-w-full text-sm table-fixed">
-          <thead class="bg-slate-200 text-slate-700">
-            <tr id="tableHead"></tr>
-          </thead>
+          <thead id="tableHead" class="bg-slate-200 text-slate-700"></thead>
           <tbody id="tableBody" class="divide-y"></tbody>
         </table>
       </div>
@@ -53,3 +51,4 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   initPage(page);
 });
+
