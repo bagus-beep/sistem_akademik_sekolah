@@ -8,37 +8,45 @@ let allData = [];
 let filtered = [];
 let pager;
 
-const tbody = document.getElementById('tableBody');
-const info  = document.getElementById('info');
+export async function initStudents() {
+  const tbody = document.getElementById('tableBody');
+  const info  = document.getElementById('info');
+  const searchInput = document.getElementById('searchInput');
+  const nextBtn = document.getElementById('nextBtn');
+  const prevBtn = document.getElementById('prevBtn');
 
-fetchAll().then(({ students, classes }) => {
-  const classById = Object.fromEntries(classes.map(c => [c.id, c]));
+  if (!tbody) return;
+
+  const { students, classes } = await fetchAll();
+
+  const classById = Object.fromEntries(classes.map(c => [c.id, c.name]));
 
   allData = students.map(s => ({
     nis: s.nis,
     name: s.name,
-    class: classById[s.class_id]?.name || '-'
+    class: classById[s.class_id] || '-'
   }));
 
   filtered = [...allData];
   pager = createPaginator(filtered);
-  draw();
-});
 
-function draw() {
-  renderTable({
-    data: pager.getPage(),
-    columns: studentColumns,
-    tbody
-  });
-  info.textContent = pager.info();
+  function draw() {
+    renderTable({
+      data: pager.getPage(),
+      columns: studentColumns,
+      tbody
+    });
+    info.textContent = pager.info();
+  }
+
+  draw();
+
+  searchInput.oninput = e => {
+    filtered = applySearch(allData, e.target.value);
+    pager = createPaginator(filtered);
+    draw();
+  };
+
+  nextBtn.onclick = () => pager.canNext() && (pager.next(), draw());
+  prevBtn.onclick = () => pager.canPrev() && (pager.prev(), draw());
 }
-
-searchInput.oninput = e => {
-  filtered = applySearch(allData, e.target.value);
-  pager = createPaginator(filtered);
-  draw();
-};
-
-nextBtn.onclick = () => pager.canNext() && (pager.next(), draw());
-prevBtn.onclick = () => pager.canPrev() && (pager.prev(), draw());
