@@ -24,7 +24,7 @@ export function renderTableHeader({ columns, thead }) {
   columns.forEach(col => {
     const th = document.createElement('th');
     if (col.key === 'summary') {
-      td.className =
+      th.className =
         'p-3 max-w-md whitespace-normal text-slate-600';
     }
     th.textContent = col.label;
@@ -33,3 +33,4 @@ export function renderTableHeader({ columns, thead }) {
 
   thead.appendChild(tr);
 }
+
