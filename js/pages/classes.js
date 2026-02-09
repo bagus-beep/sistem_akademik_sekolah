@@ -8,44 +8,43 @@ let allData = [];
 let filtered = [];
 let pager;
 
-const tbody = document.getElementById('tableBody');
-const info  = document.getElementById('info');
+export async function initClasses() {
+  const tbody = document.getElementById('tableBody');
+  const info  = document.getElementById('info');
+  const searchInput = document.getElementById('searchInput');
+  const nextBtn = document.getElementById('nextBtn');
+  const prevBtn = document.getElementById('prevBtn');
 
-fetchAll().then(({ classes, schedules, lessons, teachers }) => {
-  const lessonById  = Object.fromEntries(lessons.map(l => [l.id, l]));
-  const teacherById = Object.fromEntries(teachers.map(t => [t.id, t]));
+  if (!tbody) return;
 
-  classes.forEach(c => {
-    schedules
-      .filter(s => s.class_id === c.id)
-      .forEach(s => {
-        allData.push({
-          class: c.name,
-          lesson: lessonById[s.lessons_id]?.subject || '-',
-          teacher: teacherById[s.teacher_id]?.name || '-'
-        });
-      });
-  });
+  const { classes } = await fetchAll();
+
+  allData = classes.map(c => ({
+    name: c.name,
+    level: c.level,
+    major: c.major || '-'
+  }));
 
   filtered = [...allData];
   pager = createPaginator(filtered);
-  draw();
-});
 
-function draw() {
-  renderTable({
-    data: pager.getPage(),
-    columns: classColumns,
-    tbody
-  });
-  info.textContent = pager.info();
+  function draw() {
+    renderTable({
+      data: pager.getPage(),
+      columns: classColumns,
+      tbody
+    });
+    info.textContent = pager.info();
+  }
+
+  draw();
+
+  searchInput.oninput = e => {
+    filtered = applySearch(allData, e.target.value);
+    pager = createPaginator(filtered);
+    draw();
+  };
+
+  nextBtn.onclick = () => pager.canNext() && (pager.next(), draw());
+  prevBtn.onclick = () => pager.canPrev() && (pager.prev(), draw());
 }
-
-searchInput.oninput = e => {
-  filtered = applySearch(allData, e.target.value);
-  pager = createPaginator(filtered);
-  draw();
-};
-
-nextBtn.onclick = () => pager.canNext() && (pager.next(), draw());
-prevBtn.onclick = () => pager.canPrev() && (pager.prev(), draw());
