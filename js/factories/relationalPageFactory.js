@@ -1,5 +1,5 @@
 import { fetchAll } from '../core/fetcher.js';
-import { renderTable } from '../core/table.js';
+import { renderTable,renderTableHeader } from '../core/table.js';
 import { createPaginator } from '../core/paginator.js';
 import { applySearch } from '../core/search.js';
 import { applyComputedColumns } from '../core/applyComputedColumns.js';
@@ -7,25 +7,27 @@ import { applyComputedColumns } from '../core/applyComputedColumns.js';
 /**
  * Relational Page Factory
  * ----------------------------------------
- * Membuat halaman tabel relasional (join)
- * berbasis konfigurasi deklaratif
+ * Declarative relational table (frontend ORM-lite)
  */
 export function createRelationalPage(config) {
   // =========================
   // VALIDATION
   // =========================
-  if (!config?.base) {
-    throw new Error('[relationalPageFactory] "base" is required');
-  }
-  if (!config?.relations) {
-    throw new Error('[relationalPageFactory] "relations" is required');
-  }
-  if (!config?.columns) {
-    throw new Error('[relationalPageFactory] "columns" is required');
-  }
-  if (!config?.selectors) {
-    throw new Error('[relationalPageFactory] "selectors" is required');
-  }
+  const required = ['base', 'relations', 'columns', 'selectors'];
+  required.forEach(key => {
+    if (!config?.[key]) {
+      throw new Error(`[relationalPageFactory] "${key}" is required`);
+    }
+  });
+
+  const requiredSelectors = ['thead', 'tbody'];
+  requiredSelectors.forEach(key => {
+    if (!config.selectors[key]) {
+      throw new Error(
+        `[relationalPageFactory] selectors.${key} is required`
+      );
+    }
+  });
 
   // =========================
   // INTERNAL STATE
@@ -46,16 +48,9 @@ export function createRelationalPage(config) {
     const row = {};
 
     for (const [key, rel] of Object.entries(config.relations)) {
-      const {
-        from,
-        source,
-        display,
-        fallback = '-'
-      } = rel;
-
-      const refId  = baseRow[from];
+      const { from, source, display, fallback = '-' } = rel;
+      const refId = baseRow[from];
       const refRow = indexes[source]?.[refId];
-
       row[key] = refRow?.[display] ?? fallback;
     }
 
@@ -66,85 +61,91 @@ export function createRelationalPage(config) {
   // MAIN INIT
   // =========================
   async function init() {
-    // ---- bind DOM
+    const thead  = qs(config.selectors.thead);
     const tbody  = qs(config.selectors.tbody);
     const info   = qs(config.selectors.info);
     const search = qs(config.selectors.search);
     const next   = qs(config.selectors.next);
     const prev   = qs(config.selectors.prev);
 
-    if (!tbody) {
-      console.warn('[relationalPageFactory] tbody not found');
+    if (!thead || !tbody) {
+      console.warn('[relationalPageFactory] table elements not found');
       return;
     }
 
-    // ---- fetch data
-    const data = await fetchAll();
+    try {
+      // ---- fetch data
+      const data = await fetchAll();
+      const baseRows = data[config.base];
 
-    const baseRows = data[config.base];
-    if (!Array.isArray(baseRows)) {
-      throw new Error(
-        `[relationalPageFactory] base "${config.base}" not found in fetchAll()`
-      );
-    }
-
-    // ---- build indexes
-    const indexes = {};
-    Object.values(config.relations).forEach(rel => {
-      if (!indexes[rel.source]) {
-        indexes[rel.source] = buildIndex(data[rel.source] || []);
+      if (!Array.isArray(baseRows)) {
+        throw new Error(
+          `[relationalPageFactory] base "${config.base}" not found`
+        );
       }
-    });
 
-    // ---- build flat rows (PIPELINE BERSIH)
-    allData = baseRows.map(baseRow => {
-      // 1. resolve relations
-      const resolved = resolveRelations(baseRow, indexes);
-
-      // 2. optional transform
-      const transformed = config.transform
-        ? config.transform(resolved, baseRow)
-        : resolved;
-
-      // 3. apply computed columns
-      return applyComputedColumns(transformed, config.columns);
-    });
-
-    // 4. optional filter
-    if (typeof config.filter === 'function') {
-      allData = allData.filter(config.filter);
-    }
-
-    filtered = [...allData];
-    pager = createPaginator(filtered, config.pageSize);
-
-    // ---- render
-    function draw() {
-      renderTable({
-        data: pager.getPage(),
-        columns: config.columns,
-        tbody
+      // ---- build indexes
+      const indexes = {};
+      Object.values(config.relations).forEach(rel => {
+        if (!indexes[rel.source]) {
+          indexes[rel.source] = buildIndex(data[rel.source] || []);
+        }
       });
-      if (info) info.textContent = pager.info();
-    }
 
-    draw();
+      // ---- build rows (PIPELINE)
+      allData = baseRows.map(baseRow => {
+        const resolved = resolveRelations(baseRow, indexes);
+        const transformed = config.transform
+          ? config.transform(resolved, baseRow)
+          : resolved;
 
-    // ---- UI events
-    if (search) {
-      search.oninput = e => {
-        filtered = applySearch(allData, e.target.value);
-        pager = createPaginator(filtered, config.pageSize);
-        draw();
-      };
-    }
+        return applyComputedColumns(transformed, config.columns);
+      });
 
-    if (next) {
-      next.onclick = () => pager.canNext() && (pager.next(), draw());
-    }
+      if (typeof config.filter === 'function') {
+        allData = allData.filter(config.filter);
+      }
 
-    if (prev) {
-      prev.onclick = () => pager.canPrev() && (pager.prev(), draw());
+      filtered = [...allData];
+      pager = createPaginator(filtered, config.pageSize);
+
+      // ---- render header ONCE
+      renderTableHeader({
+        columns: config.columns,
+        thead
+      });
+
+      // ---- render body
+      function draw() {
+        renderTable({
+          data: pager.getPage(),
+          columns: config.columns,
+          tbody
+        });
+        if (info) info.textContent = pager.info();
+      }
+
+      draw();
+
+      // ---- UI events
+      if (search) {
+        search.oninput = e => {
+          filtered = applySearch(allData, e.target.value);
+          pager = createPaginator(filtered, config.pageSize);
+          draw();
+        };
+      }
+
+      if (next) {
+        next.onclick = () => pager.canNext() && (pager.next(), draw());
+      }
+
+      if (prev) {
+        prev.onclick = () => pager.canPrev() && (pager.prev(), draw());
+      }
+
+    } catch (err) {
+      console.error('[relationalPageFactory]', err);
     }
   }
 
