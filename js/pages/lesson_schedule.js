@@ -1,4 +1,3 @@
-// pages/lesson_schedule.js
 import { relationalPage } from '../factories/pagePresets.js';
 import { scheduleColumns } from '../config/columns.js';
 import { formatTimeRange } from '../core/format.js';
@@ -38,3 +37,4 @@ export function initLessonSchedule() {
     columns: scheduleColumns
   }).init();
 }
+
