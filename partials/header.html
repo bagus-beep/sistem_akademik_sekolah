@@ -1,15 +1,40 @@
-<header class="bg-white shadow-sm">
-  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between">
-    <h1 class="text-xl font-bold">
-      📊 Dashboard Akademik
+<header class="bg-white shadow-sm sticky top-0 z-20">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+
+    <!-- BRAND -->
+    <h1 class="text-lg sm:text-xl font-bold flex items-center gap-2">
+      📊 <span>Dashboard Akademik</span>
     </h1>
 
-    <nav class="flex gap-4 text-sm text-slate-600">
-      <a href="index.html" class="hover:text-blue-600">Dashboard</a>
-      <a href="teachers.html">Guru</a>
-      <a href="students.html">Siswa</a>
-      <a href="classes.html">Kelas</a>
-      <a href="lessons.html">Pelajaran</a>
+    <!-- DESKTOP NAV -->
+    <nav class="hidden md:flex gap-6 text-sm text-slate-600 font-medium">
+      <a href="index.html" class="nav-link">Dashboard</a>
+      <a href="teachers.html" class="nav-link">Guru</a>
+      <a href="students.html" class="nav-link">Siswa</a>
+      <a href="classes.html" class="nav-link">Kelas</a>
+      <a href="lessons.html" class="nav-link">Pelajaran</a>
     </nav>
+
+    <!-- HAMBURGER BUTTON -->
+    <button
+      id="menuBtn"
+      class="md:hidden inline-flex items-center justify-center rounded-lg p-2
+             text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      aria-label="Toggle Menu"
+    >
+      ☰
+    </button>
+  </div>
+
+  <!-- MOBILE MENU -->
+  <div
+    id="mobileMenu"
+    class="md:hidden hidden border-t bg-white px-6 py-4 space-y-3 text-sm text-slate-700"
+  >
+    <a href="index.html" class="block mobile-link">Dashboard</a>
+    <a href="teachers.html" class="block mobile-link">Guru</a>
+    <a href="students.html" class="block mobile-link">Siswa</a>
+    <a href="classes.html" class="block mobile-link">Kelas</a>
+    <a href="lessons.html" class="block mobile-link">Pelajaran</a>
   </div>
 </header>
