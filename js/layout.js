@@ -12,7 +12,6 @@ async function loadPartial(id, file) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('layout.js loaded');
   loadPartial('header', '/partials/header.html');
   loadPartial('footer', '/partials/footer.html');
 });
