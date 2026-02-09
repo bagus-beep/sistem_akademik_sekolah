@@ -1,5 +1,5 @@
 import './layout.js';
-// import { initPage } from './core/pageLoader.js';
+import { initPage } from './core/pageLoader.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const app = document.getElementById('app');
@@ -51,8 +51,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     </div>
   `;
 
-  // initPage(page);
+  initPage(page);
 });
+
 
 
 
