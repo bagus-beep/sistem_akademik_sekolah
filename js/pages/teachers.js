@@ -55,6 +55,7 @@ export function initTeachers() {
     // DOM SELECTORS
     // =========================
     selectors: {
+      thead: '#tableHead',
       tbody: '#tableBody',
       info: '#info',
       search: '#searchInput',
@@ -63,3 +64,4 @@ export function initTeachers() {
     }
   }).init();
 }
+
