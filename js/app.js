@@ -1,14 +1,23 @@
+import './layout.js';
 import { initPage } from './core/pageLoader.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const app = document.getElementById('app');
   if (!app) return;
 
   const page = app.dataset.page;
+
+  // DASHBOARD → layout & logic sendiri
+  if (page === 'dashboard') {
+    const { initDashboard } = await import('./pages/dashboard.js');
+    initDashboard();
+    return;
+  }
+
+  // PAGE TABEL → pakai layout generic
   const title = app.dataset.title;
   const searchPlaceholder = app.dataset.search;
 
-  // Render base UI
   app.innerHTML = `
     <h2 class="text-lg font-semibold mb-4">${title}</h2>
 
@@ -32,24 +41,15 @@ document.addEventListener('DOMContentLoaded', () => {
         </table>
       </div>
 
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between
-                  gap-3 p-4 border-t text-sm">
+      <div class="flex justify-between items-center p-4 border-t text-sm">
         <span id="info" class="text-slate-600"></span>
-
-        <div class="flex gap-2 self-end sm:self-auto">
-          <button id="prevBtn"
-            class="px-4 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition">
-            Prev
-          </button>
-          <button id="nextBtn"
-            class="px-4 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 transition">
-            Next
-          </button>
+        <div class="flex gap-2">
+          <button id="prevBtn" class="btn">Prev</button>
+          <button id="nextBtn" class="btn">Next</button>
         </div>
       </div>
     </div>
   `;
 
-  // Load page-specific logic
   initPage(page);
 });
