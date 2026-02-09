@@ -9,13 +9,18 @@ export function initTeachers() {
     base: 'schedules',
 
     // =========================
-    // RELATIONS (JOIN DECLARATIVE)
+    // RELATIONS (DECLARATIVE JOIN)
     // =========================
     relations: {
       teacher: {
         from: 'teacher_id',
         source: 'teachers',
         display: 'name'
+      },
+      teacher_nip: {
+        from: 'teacher_id',
+        source: 'teachers',
+        display: 'nip'
       },
       lesson: {
         from: 'lessons_id',
@@ -30,22 +35,19 @@ export function initTeachers() {
     },
 
     // =========================
-    // COMPUTED + TRANSFORM
+    // TRANSFORM (NORMALIZATION ONLY)
     // =========================
-    transform(resolved, baseRow) {
+    transform(resolved) {
       return {
-        nip: baseRow.nip || '-',
+        nip: resolved.teacher_nip || '-',
         teacher: resolved.teacher,
         lesson: resolved.lesson,
-        class: resolved.class,
-
-        // 🔥 computed field
-        summary: `${resolved.teacher} mengajar ${resolved.lesson} di ${resolved.class}`
+        class: resolved.class
       };
     },
 
     // =========================
-    // TABLE
+    // TABLE CONFIG
     // =========================
     columns: teacherColumns,
 
