@@ -3,7 +3,7 @@ import { initTeachers } from '../pages/teachers.js';
 import { initStudents } from '../pages/students.js';
 import { initClasses } from '../pages/classes.js';
 import { initLessons } from '../pages/lessons.js';
-import { initSchedule } from '../pages/lesson_schedule.js';
+import { initLessonSchedule } from '../pages/lesson_schedule.js';
 
 const pages = {
   dashboard: initDashboard,
@@ -11,7 +11,7 @@ const pages = {
   students: initStudents,
   classes: initClasses,
   lessons: initLessons,
-  lesson_schedule: initSchedule
+  lesson_schedule: initLessonSchedule
 };
 
 export function initPage(page) {
@@ -21,4 +21,5 @@ export function initPage(page) {
   }
   pages[page]();
 }
+
 
