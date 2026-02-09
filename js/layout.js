@@ -1,14 +1,17 @@
 async function loadPartial(id, file) {
-  const el = document.getElementById(id);
-  if (!el) return;
+  const target = document.getElementById(id);
+  if (!target) return;
 
-  const res = await fetch(file);
-  el.innerHTML = await res.text();
+  try {
+    const res = await fetch(file);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    target.innerHTML = await res.text();
+  } catch (err) {
+    console.error(`Gagal load ${file}`, err);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  loadPartial('header', '../partials/header.html');
-  loadPartial('footer', '../partials/footer.html');
+  loadPartial('header', '/partials/header.html');
+  loadPartial('footer', '/partials/footer.html');
 });
-
-
