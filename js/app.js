@@ -1,4 +1,4 @@
-// import './layout.js';
+import './layout.js';
 import { initPage } from './core/pageLoader.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -53,4 +53,5 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   initPage(page);
 });
+
 
