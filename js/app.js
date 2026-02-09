@@ -51,8 +51,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     </div>
   `;
 
-  initPage(page);
+  // initPage(page);
 });
+
 
 
 
