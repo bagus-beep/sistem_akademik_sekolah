@@ -1,7 +1,12 @@
 async function loadPartial(id, file) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
   const res = await fetch(file);
-  document.getElementById(id).innerHTML = await res.text();
+  el.innerHTML = await res.text();
 }
 
-loadPartial('header', 'partials/header.html');
-loadPartial('footer', 'partials/footer.html');
+document.addEventListener('DOMContentLoaded', () => {
+  loadPartial('header', 'partials/header.html');
+  loadPartial('footer', 'partials/footer.html');
+});
