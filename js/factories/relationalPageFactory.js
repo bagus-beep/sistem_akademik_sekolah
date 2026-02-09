@@ -2,6 +2,7 @@ import { fetchAll } from '../core/fetcher.js';
 import { renderTable } from '../core/table.js';
 import { createPaginator } from '../core/paginator.js';
 import { applySearch } from '../core/search.js';
+import { applyComputedColumns } from '../core/applyComputedColumns.js';
 
 /**
  * Relational Page Factory
@@ -36,13 +37,10 @@ export function createRelationalPage(config) {
   // =========================
   // HELPERS
   // =========================
-  function qs(selector) {
-    return document.querySelector(selector);
-  }
+  const qs = selector => document.querySelector(selector);
 
-  function buildIndex(rows) {
-    return Object.fromEntries(rows.map(r => [r.id, r]));
-  }
+  const buildIndex = rows =>
+    Object.fromEntries(rows.map(r => [r.id, r]));
 
   function resolveRelations(baseRow, indexes) {
     const row = {};
@@ -55,7 +53,7 @@ export function createRelationalPage(config) {
         fallback = '-'
       } = rel;
 
-      const refId = baseRow[from];
+      const refId  = baseRow[from];
       const refRow = indexes[source]?.[refId];
 
       row[key] = refRow?.[display] ?? fallback;
@@ -98,22 +96,29 @@ export function createRelationalPage(config) {
       }
     });
 
-    // ---- build flat rows
+    // ---- build flat rows (PIPELINE BERSIH)
     allData = baseRows.map(baseRow => {
+      // 1. resolve relations
       const resolved = resolveRelations(baseRow, indexes);
-      return config.transform
+
+      // 2. optional transform
+      const transformed = config.transform
         ? config.transform(resolved, baseRow)
         : resolved;
+
+      // 3. apply computed columns
+      return applyComputedColumns(transformed, config.columns);
     });
 
-    if (config.filter) {
+    // 4. optional filter
+    if (typeof config.filter === 'function') {
       allData = allData.filter(config.filter);
     }
 
     filtered = [...allData];
     pager = createPaginator(filtered, config.pageSize);
 
-    // ---- draw
+    // ---- render
     function draw() {
       renderTable({
         data: pager.getPage(),
@@ -146,7 +151,5 @@ export function createRelationalPage(config) {
   // =========================
   // PUBLIC API
   // =========================
-  return {
-    init
-  };
+  return { init };
 }
