@@ -1,22 +1,25 @@
-import { teachersPage } from '../pages/teachers.js';
-import { studentsPage } from '../pages/students.js';
-import { classesPage } from '../pages/classes.js';
-import { lessonsPage } from '../pages/lessons.js';
-import { schedulePage } from '../pages/lesson_schedule.js';
+// js/core/pageLoader.js
+
+import { initDashboard } from '../pages/dashboard.js';
+import { initTeachers } from '../pages/teachers.js';
+import { initStudents } from '../pages/students.js';
+import { initClasses } from '../pages/classes.js';
+import { initLessons } from '../pages/lessons.js';
+import { initSchedule } from '../pages/lesson_schedule.js';
 
 const pages = {
-  teachers: teachersPage,
-  students: studentsPage,
-  classes: classesPage,
-  lessons: lessonsPage,
-  lesson_schedule: schedulePage
+  dashboard: initDashboard,
+  teachers: initTeachers,
+  students: initStudents,
+  classes: initClasses,
+  lessons: initLessons,
+  lesson_schedule: initSchedule
 };
 
-export function initPage(pageName) {
-  const page = pages[pageName];
-  if (!page) {
-    console.warn(`Page "${pageName}" not registered`);
+export function initPage(page) {
+  if (!pages[page]) {
+    console.warn(`Page "${page}" not registered`);
     return;
   }
-  page();
+  pages[page]();
 }
