@@ -16,6 +16,24 @@ export function renderTable({ data, columns, tbody }) {
   });
 }
 
+// export function renderTableHeader({ columns, thead }) {
+//   thead.innerHTML = '';
+
+//   const tr = document.createElement('tr');
+
+//   columns.forEach(col => {
+//     const th = document.createElement('th');
+//     if (col.key === 'summary') {
+//       th.className =
+//         'p-3 max-w-md whitespace-normal text-slate-600';
+//     }
+//     th.textContent = col.label;
+//     tr.appendChild(th);
+//   });
+
+//   thead.appendChild(tr);
+// }
+
 export function renderTableHeader({ columns, thead }) {
   thead.innerHTML = '';
 
@@ -23,14 +41,19 @@ export function renderTableHeader({ columns, thead }) {
 
   columns.forEach(col => {
     const th = document.createElement('th');
+
+    // BASE STYLE (WAJIB UNTUK SEMUA)
+    th.className =
+      'p-3 text-left font-semibold whitespace-nowrap';
+
+    // KHUSUS SUMMARY
     if (col.key === 'summary') {
-      th.className =
-        'p-3 max-w-md whitespace-normal text-slate-600';
+      th.className += ' max-w-md whitespace-normal';
     }
+
     th.textContent = col.label;
     tr.appendChild(th);
   });
 
   thead.appendChild(tr);
 }
-
