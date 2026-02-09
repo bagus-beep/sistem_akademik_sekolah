@@ -17,3 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPartial('footer', '/partials/footer.html');
 });
 
+document.addEventListener('click', (e) => {
+  const btn = document.getElementById('menuBtn');
+  const menu = document.getElementById('mobileMenu');
+
+  if (!btn || !menu) return;
+
+  if (btn.contains(e.target)) {
+    menu.classList.toggle('hidden');
+  } else if (!menu.contains(e.target)) {
+    menu.classList.add('hidden');
+  }
+});
