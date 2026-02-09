@@ -1,5 +1,3 @@
-// js/core/pageLoader.js
-
 import { initDashboard } from '../pages/dashboard.js';
 import { initTeachers } from '../pages/teachers.js';
 import { initStudents } from '../pages/students.js';
@@ -23,3 +21,4 @@ export function initPage(page) {
   }
   pages[page]();
 }
+
