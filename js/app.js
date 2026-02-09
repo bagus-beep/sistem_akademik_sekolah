@@ -53,9 +53,3 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   initPage(page);
 });
-
-
-
-
-
-
