@@ -17,13 +17,34 @@ export async function initClasses() {
 
   if (!tbody) return;
 
-  const { classes } = await fetchAll();
+  const {
+    classes,
+    schedules,
+    lessons,
+    teachers
+  } = await fetchAll();
 
-  allData = classes.map(c => ({
-    name: c.name,
-    level: c.level,
-    major: c.major || '-'
-  }));
+  const lessonById  = Object.fromEntries(
+    lessons.map(l => [l.id, l.subject])
+  );
+
+  const teacherById = Object.fromEntries(
+    teachers.map(t => [t.id, t.name])
+  );
+
+  allData = [];
+
+  classes.forEach(c => {
+    schedules
+      .filter(s => s.class_id === c.id)
+      .forEach(s => {
+        allData.push({
+          class: c.name,
+          lesson: lessonById[s.lessons_id] || '-',
+          teacher: teacherById[s.teacher_id] || '-'
+        });
+      });
+  });
 
   filtered = [...allData];
   pager = createPaginator(filtered);
