@@ -9,3 +9,19 @@ body {
 .stat-card:hover {
   @apply shadow-md ring-2;
 }
+
+.nav-link {
+  position: relative;
+}
+
+.nav-link:hover {
+  color: #2563eb;
+}
+
+.mobile-link {
+  padding: 0.5rem 0;
+}
+
+.mobile-link:hover {
+  color: #2563eb;
+}
