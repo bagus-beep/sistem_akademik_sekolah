@@ -67,16 +67,41 @@ export const lessonColumns = [
 // SCHEDULE
 // ==========================
 export const scheduleColumns = [
-  { key: 'day', label: 'Hari' },
-  { key: 'time', label: 'Jam' },
-  { key: 'lesson', label: 'Mata Pelajaran' },
-  { key: 'teacher', label: 'Guru' },
-  { key: 'class', label: 'Kelas' },
+  {
+    key: 'day',
+    label: 'Hari'
+  },
+  {
+    key: 'time',
+    label: 'Jam'
+  },
+  {
+    key: 'lesson',
+    label: 'Mata Pelajaran'
+  },
+  {
+    key: 'teacher',
+    label: 'Guru'
+  },
+  {
+    key: 'class',
+    label: 'Kelas'
+  },
 
+  // =========================
+  // COMPUTED COLUMN
+  // =========================
   {
     key: 'summary',
     label: 'Ringkasan',
-    compute: row =>
-      `${row.lesson} (${row.class}) oleh ${row.teacher} pada ${row.day}, ${row.time}`
+    className: 'max-w-md whitespace-normal text-slate-700',
+    compute: row => {
+      const day  = row.day ?? '-';
+      const time = row.time && row.time !== '- – -'
+        ? row.time
+        : 'jam belum ditentukan';
+
+      return `${row.lesson} (${row.class}) oleh ${row.teacher} pada ${day}, ${time}`;
+    }
   }
 ];
