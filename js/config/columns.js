@@ -71,10 +71,19 @@ export const scheduleColumns = [
     key: 'day',
     label: 'Hari'
   },
+
+  // =========================
+  // COMPUTED TIME
+  // =========================
   {
     key: 'time',
-    label: 'Jam'
+    label: 'Jam',
+    compute: row => {
+      if (!row.time_start || !row.time_end) return '-';
+      return `${row.time_start.slice(0, 5)} – ${row.time_end.slice(0, 5)}`;
+    }
   },
+
   {
     key: 'lesson',
     label: 'Mata Pelajaran'
@@ -89,19 +98,24 @@ export const scheduleColumns = [
   },
 
   // =========================
-  // COMPUTED COLUMN
+  // SUMMARY (DEPENDS ON ABOVE)
   // =========================
   {
     key: 'summary',
     label: 'Ringkasan',
     className: 'max-w-md whitespace-normal text-slate-700',
     compute: row => {
-      const day  = row.day ?? '-';
-      const time = row.time && row.time !== '- – -'
-        ? row.time
-        : 'jam belum ditentukan';
+      const lesson = row.lesson ?? '-';
+      const kelas  = row.class ?? '-';
+      const guru   = row.teacher ?? '-';
+      const day    = row.day ?? '-';
 
-      return `${row.lesson} (${row.class}) oleh ${row.teacher} pada ${day}, ${time}`;
+      const time =
+        row.time && row.time !== '-'
+          ? row.time
+          : 'jam belum ditentukan';
+
+      return `${lesson} (${kelas}) oleh ${guru} pada ${day}, ${time}`;
     }
   }
 ];
