@@ -26,15 +26,11 @@ export function initLessonSchedule() {
 
     transform(r) {
       return {
-        day: r.day,
-        time: formatTimeRange(r.start_time, r.end_time),
-        lesson: r.lesson,
-        teacher: r.teacher,
-        class: r.class
+        ...r,
+        time: formatTimeRange(r.time_start, r.time_end)
       };
     },
 
     columns: scheduleColumns
   }).init();
 }
-
