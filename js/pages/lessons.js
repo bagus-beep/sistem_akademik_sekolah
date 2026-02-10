@@ -1,8 +1,8 @@
-import { createRelationalPage } from '../factories/relationalPageFactory.js';
+import { relationalPage } from '../factories/pagePresets.js';
 import { lessonColumns } from '../config/columns.js';
 
 export function initLessons() {
-  createRelationalPage({
+  relationalPage({
     // =========================
     // BASE TABLE
     // =========================
@@ -30,31 +30,18 @@ export function initLessons() {
     },
 
     // =========================
-    // TRANSFORM
+    // TRANSFORM (NORMALIZATION)
     // =========================
-    transform(resolved) {
+    transform(r) {
       return {
-        lesson: resolved.lesson,
-        teacher: resolved.teacher,
-        class: resolved.class
+        ...r
+        // lesson, teacher, class sudah resolved
       };
     },
 
     // =========================
     // TABLE CONFIG
     // =========================
-    columns: lessonColumns,
-
-    // =========================
-    // DOM SELECTORS
-    // =========================
-    selectors: {
-      thead: '#tableHead',
-      tbody: '#tableBody',
-      info: '#info',
-      search: '#searchInput',
-      next: '#nextBtn',
-      prev: '#prevBtn'
-    }
+    columns: lessonColumns
   }).init();
 }
