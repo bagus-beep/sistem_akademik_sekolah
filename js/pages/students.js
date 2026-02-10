@@ -1,8 +1,8 @@
-import { createRelationalPage } from '../factories/relationalPageFactory.js';
+import { relationalPage } from '../factories/pagePresets.js';
 import { studentColumns } from '../config/columns.js';
 
 export function initStudents() {
-  createRelationalPage({
+  relationalPage({
     // =========================
     // BASE TABLE
     // =========================
@@ -20,31 +20,19 @@ export function initStudents() {
     },
 
     // =========================
-    // TRANSFORM
+    // TRANSFORM (NORMALIZATION)
     // =========================
-    transform(resolved, baseRow) {
+    transform(r) {
       return {
-        nis: baseRow.nis,
-        name: baseRow.name,
-        class: resolved.class
+        ...r
+        // nis, name sudah dari base
+        // class sudah resolved
       };
     },
 
     // =========================
     // TABLE CONFIG
     // =========================
-    columns: studentColumns,
-
-    // =========================
-    // DOM SELECTORS
-    // =========================
-    selectors: {
-      thead: '#tableHead',
-      tbody: '#tableBody',
-      info: '#info',
-      search: '#searchInput',
-      next: '#nextBtn',
-      prev: '#prevBtn'
-    }
+    columns: studentColumns
   }).init();
 }
