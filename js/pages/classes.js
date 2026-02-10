@@ -1,15 +1,15 @@
-import { createRelationalPage } from '../factories/relationalPageFactory.js';
+import { relationalPage } from '../factories/pagePresets.js';
 import { classColumns } from '../config/columns.js';
 
 export function initClasses() {
-  createRelationalPage({
+  relationalPage({
     // =========================
     // BASE TABLE
     // =========================
     base: 'schedules',
 
     // =========================
-    // RELATIONS (DECLARATIVE JOIN)
+    // RELATIONS
     // =========================
     relations: {
       class: {
@@ -30,31 +30,18 @@ export function initClasses() {
     },
 
     // =========================
-    // TRANSFORM (NORMALIZATION ONLY)
+    // TRANSFORM (NORMALIZATION)
     // =========================
-    transform(resolved) {
+    transform(r) {
       return {
-        class: resolved.class,
-        lesson: resolved.lesson,
-        teacher: resolved.teacher
+        ...r
+        // class, lesson, teacher sudah resolved
       };
     },
 
     // =========================
     // TABLE CONFIG
     // =========================
-    columns: classColumns,
-
-    // =========================
-    // DOM SELECTORS
-    // =========================
-    selectors: {
-      thead: '#tableHead',
-      tbody: '#tableBody',
-      info: '#info',
-      search: '#searchInput',
-      next: '#nextBtn',
-      prev: '#prevBtn'
-    }
+    columns: classColumns
   }).init();
 }
