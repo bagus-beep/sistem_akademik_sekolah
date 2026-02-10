@@ -39,6 +39,7 @@ export function initTeachers() {
     // =========================
     transform(resolved) {
       return {
+        ...resolved,
         nip: resolved.teacher_nip || '-',
         teacher: resolved.teacher,
         lesson: resolved.lesson,
@@ -64,4 +65,5 @@ export function initTeachers() {
     }
   }).init();
 }
+
 
