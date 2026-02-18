@@ -7,12 +7,8 @@
     </h1>
 
     <!-- DESKTOP NAV -->
-    <nav class="hidden md:flex gap-6 text-sm text-slate-600 font-medium">
-      <a href="../index.html" class="nav-link">Dashboard</a>
-      <a href="pages/teachers.html" class="nav-link">Guru</a>
-      <a href="students.html" class="nav-link">Siswa</a>
-      <a href="classes.html" class="nav-link">Kelas</a>
-      <a href="lessons.html" class="nav-link">Pelajaran</a>
+    <nav id="desktopNav"
+         class="hidden md:flex gap-6 text-sm text-slate-600 font-medium">
     </nav>
 
     <!-- HAMBURGER BUTTON -->
@@ -31,18 +27,47 @@
     id="mobileMenu"
     class="md:hidden hidden border-t bg-white px-6 py-4 space-y-3 text-sm text-slate-700"
   >
-    <a href="../index.html" class="block mobile-link">Dashboard</a>
-    <a href="teachers.html" class="block mobile-link">Guru</a>
-    <a href="students.html" class="block mobile-link">Siswa</a>
-    <a href="classes.html" class="block mobile-link">Kelas</a>
-    <a href="lessons.html" class="block mobile-link">Pelajaran</a>
   </div>
 </header>
 
+<script>
+(function () {
 
+  const isInPages = window.location.pathname.includes('/pages/');
+  const basePath = isInPages ? '../' : '';
 
+  const links = [
+    { name: 'Dashboard', path: basePath + 'index.html' },
+    { name: 'Guru', path: basePath + 'pages/teachers.html' },
+    { name: 'Siswa', path: basePath + 'pages/students.html' },
+    { name: 'Kelas', path: basePath + 'pages/classes.html' },
+    { name: 'Pelajaran', path: basePath + 'pages/lessons.html' }
+  ];
 
+  const desktopNav = document.getElementById('desktopNav');
+  const mobileMenu = document.getElementById('mobileMenu');
 
+  links.forEach(link => {
+    const isActive = window.location.pathname.endsWith(link.path.replace(basePath, ''));
 
+    const desktopLink = document.createElement('a');
+    desktopLink.href = link.path;
+    desktopLink.textContent = link.name;
+    desktopLink.className =
+      'nav-link hover:text-blue-600 transition ' +
+      (isActive ? 'text-blue-600 font-semibold' : '');
 
+    desktopNav.appendChild(desktopLink);
 
+    const mobileLink = document.createElement('a');
+    mobileLink.href = link.path;
+    mobileLink.textContent = link.name;
+    mobileLink.className =
+      'block mobile-link ' +
+      (isActive ? 'text-blue-600 font-semibold' : '');
+
+    mobileMenu.appendChild(mobileLink);
+  });
+
+})();
+</script>
