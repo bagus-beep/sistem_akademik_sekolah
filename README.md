@@ -33,9 +33,9 @@ scalable, dan siap dikembangkan ke tahap production-level system.
 
 ## 🌐 Demo (GitHub Pages) 
 
-🔗 https://bagus-beep.github.io/data_sekolah/ 
+🔗 https://bagus-beep.github.io/sistem_akademik_sekolah/ 
 
-Repository: 🔗 https://github.com/bagus-beep/data_sekolah
+Repository: 🔗 https://github.com/bagus-beep/sistem_akademik_sekolah
 
 ------------------------------------------------------------------------
 
