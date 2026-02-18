@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadPartial('header', `${basePath}/partials/header.html`);
   await loadPartial('footer', `${basePath}/partials/footer.html`);
 
-  generateNav();      // ← dijalankan setelah header siap
-  initMobileMenu();   // ← aman karena header sudah ada
+  generateNav();
+  initMobileMenu();
 });
+
