@@ -11,9 +11,13 @@ async function loadPartial(id, file) {
   }
 }
 
+const basePath = window.location.pathname.includes('sistem_akademik_sekolah')
+  ? '/sistem_akademik_sekolah'
+  : '';
+
 document.addEventListener('DOMContentLoaded', () => {
-  loadPartial('header', '/partials/header.html');
-  loadPartial('footer', '/partials/footer.html');
+  loadPartial('header', `${basePath}/partials/header.html`);
+  loadPartial('footer', `${basePath}/partials/footer.html`);
 });
 
 document.addEventListener('click', (e) => {
@@ -28,3 +32,4 @@ document.addEventListener('click', (e) => {
     menu.classList.add('hidden');
   }
 });
+
